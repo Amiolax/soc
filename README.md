@@ -44,6 +44,8 @@ ping 192.169.1.8
 ssh server@192.169.1.8 -p 22
 ```
 
+![Evidence 3: Windows hostname and ping to 192.169.1.8](Evidence3.png)
+
 *Evidence 3: Windows hostname and ping to 192.169.1.8*
 
 ---
@@ -58,7 +60,12 @@ ssh server@192.169.1.8 -p 22
 - MAC address: 08:00:27:83:94:08
 - Default gateway: 192.169.1.1
 
+![Evidence 1: Windows network adapter details](Evidence1.png)
+
 *Evidence 1: Windows network adapter details (IP, MAC, gateway)*
+
+![Evidence 2: Windows system summary](Evidence2.png)
+
 *Evidence 2: Windows system summary*
 
 ### Running Processes
@@ -83,13 +90,23 @@ sudo chown alice /home/test
 
 I then changed the file's permissions to `rwxrwx---` (770). With this setting, only alice and members of the soc group could read, write and execute the file. bob and other (future) users were excluded.
 
+![Evidence 4: Creating users, group, and file ownership](Evidence4.png)
+
 *Evidence 4: Creating users, setting passwords, group membership and file ownership*
+
+![Evidence 5: Permission change and access test](Evidence5.png)
+
 *Evidence 5: Permission change and access test (bob denied)*
+
+![Evidence 6: Switching between alice and bob](Evidence6.png)
+
 *Evidence 6: Switching between alice and bob accounts*
 
 ### Login Testing
 
 On rebooting the Ubuntu server, I performed both normal and controlled failed logins.
+
+![Evidence 7: Failed logins followed by a successful login](Evidence7.png)
 
 *Evidence 7: Failed logins followed by a successful login*
 
@@ -97,13 +114,20 @@ On rebooting the Ubuntu server, I performed both normal and controlled failed lo
 
 User creation and login events are stored in `/var/log/auth.log` and `/var/log/syslog`. These logs record the timestamp of each event.
 
+![Evidence 8: auth.log entries](Evidence8.png)
+
 *Evidence 8: `/var/log/auth.log` entries for login attempts*
 
 ### Windows Event Viewer
 
 The Windows Event Viewer was useful for locating relevant evidence.
 
+![Evidence 9: Event Viewer, System log](Evidence9.png)
+
 *Evidence 9: Windows Event Viewer, System log*
+
+![Evidence 10: Event 1074 details](Evidence10.png)
+
 *Evidence 10: Event 1074 details*
 
 ---
@@ -112,10 +136,17 @@ The Windows Event Viewer was useful for locating relevant evidence.
 
 While I was pinging the security admin machine from the Ubuntu server, Wireshark captured all packets traveling over the 192.169.1.0 network.
 
+![Evidence 11: DHCP exchange in Wireshark](Evidence11.png)
+
 *Evidence 11: DHCP exchange captured in Wireshark*
+
+![Evidence 12: ICMP echo requests and replies](Evidence12.png)
+
 *Evidence 12: ICMP echo requests and replies between 192.169.1.8 and 192.169.1.10*
 
 I was particularly interested in the **8th packet**. It contained an echo (ping) reply from **192.169.1.10** (source) to **192.169.1.8** (destination). The ping command uses the Internet Control Message Protocol (ICMP), which generated this activity.
+
+![Evidence 13: Frame 8, ICMP echo reply](Evidence13.png)
 
 *Evidence 13: Frame 8, ICMP echo reply details*
 
@@ -125,7 +156,7 @@ I was particularly interested in the **8th packet**. It contained an echo (ping)
 
 I performed a basic port scan against the organisation server (**192.169.1.8**) using nmap. The scan found **port 22 (SSH)** open on the server.
 
-I tried performing brute force on the ssh login using nmap. I possibly wrote a command and still trying to find the necessary logs/evidence needed. 
+![Evidence 14: Nmap scan of 192.169.1.8](Evidence14.png)
 
 *Evidence 14: Nmap scan results for 192.169.1.8*
 
